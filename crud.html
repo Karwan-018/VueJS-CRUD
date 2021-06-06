@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>crud</title>
+    <script src="js/vue.global.js"></script>
+    <style>
+        a{
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .dlt{
+            color: red;
+        }
+        td{
+            padding: 10px;
+        }
+        th{
+        	padding: 5px;
+        }
+    </style>
+</head>
+<body id="run">
+
+<h3>CRUD operations UI</h3>
+<input type="text" placeholder="Name" v-model="enm" id="nameupdate"> <input type="number" placeholder="Age" id="ageupdate" v-model="eag">
+<button v-on:click="update()">update</button>
+<br> <br>
+<table border="1">
+    <th>Select</th>
+    <th>#</th>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Operations</th>
+    <tr v-for="(i,index) in record">
+        <td><input type="checkbox" @click="check(index)" name="chk"> </td>
+        <td>{{i.id}}</td>
+        <td >{{i.name }}</td>
+        <td>{{i.age}}</td>
+        <td><span><a  href="#" @click="edit(index)" >edit</a> <a href="#" @click="dlt(index)" class="dlt"> delete </a> </span></td>
+    </tr>
+</table>
+<br>
+{{row}} row(s) selected. <a href="#" type="button" @click="checkAll()"> check all  </a>
+<a href="#" type="button" @click="unCheckAll">uncheck all</a>
+<a href="#" type="button" @click="dltChecked()" class="dlt">delete selected row(s)</a>
+<br><br>
+<input type="text" placeholder="Name" v-model="nm"> <input type="number" placeholder="Age" v-model="ag">
+<button v-on:click="addRec()">Add</button>
+</body>
+</html>
+<script>
+    const app = {
+        data() {
+            return{
+                record:
+                    [
+                        {id:1, name:'Azad', age:19},
+                        {id:2, name:'Sheren', age:21},
+                        {id:3, name:'Kale', age:22},
+                        {id:4, name:'Wrya', age:19}
+                    ],
+                j: 4,
+                index: 0,
+                row:0
+            }
+        },
+        methods:{
+            addRec(){
+                 this.record.push({id: ++this.j, name: this.nm, age: this.ag});
+            },
+            update(){
+                var ii = this.index;
+                console.log(ii);
+                this.record[ii]['name'] = this.enm;
+                this.record[ii]['age'] = this.eag;
+            },
+            edit(ii){
+
+                        document.getElementById('nameupdate').value = this.record[ii]['name'];
+                        document.getElementById('ageupdate').value = this.record[ii]['age'];
+                        this.index = ii;
+
+            },
+            dlt(i) {
+                this.record.splice(i, 1);
+            },
+            check(ind){
+                var items = document.getElementsByName('chk');
+                    if (items[ind].checked)
+                        this.row++;
+                    if (!items[ind].checked)
+                        this.row--;
+            },
+            checkAll(){
+                var items = document.getElementsByName('chk');
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type === 'checkbox')
+                        items[i].checked = true;
+                }
+                this.row = this.record.length;
+            },
+            unCheckAll(){
+                var items = document.getElementsByName('chk');
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type === 'checkbox')
+                        items[i].checked = false;
+                }
+                this.row = 0;
+            },
+            dltChecked(){
+                var items = document.getElementsByName('chk');
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].checked) {
+                        this.record.splice(i,1);
+                    }
+                }
+                this.unCheckAll();
+
+            }
+        }
+    }
+    Vue.createApp(app).mount('#run');
+</script>
